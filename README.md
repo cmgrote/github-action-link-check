@@ -41,15 +41,6 @@ jobs:
       - name: Check links
         id: check_links
         uses: cmgrote/github-action-link-check@master
-      - name: Create issue from file
-        uses: peter-evans/create-issue-from-file@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Broken links
-          content-filepath: ./errors.txt
-          labels: report, automated issue
-      - name: Set exit status
-        run: exit ${{ steps.check_links.outputs.exit_code }}
 ```
 
 ### Running on each push
@@ -67,6 +58,21 @@ jobs:
       - name: Check links
         id: check_links
         uses: cmgrote/github-action-link-check@master
+```
+
+## Capturing problems
+
+There are various options for capturing any problems that are identified.  Note that you will most likely
+only want to make use of one of these options, as each one will likely result in its own notifications
+(so using multiple will result in multiple notifications regarding the same problem).
+
+### Creating an issue from the results
+
+Add the following step _after_ the "Check links" step to create an issue if any broken links were found,
+replacing the name of the labels with any that you want to be assigned, or other
+[configuration options](https://github.com/peter-evans/create-issue-from-file):
+
+```yaml
       - name: Create issue from file
         uses: peter-evans/create-issue-from-file@v2
         with:
@@ -74,6 +80,14 @@ jobs:
           title: Broken links
           content-filepath: ./errors.txt
           labels: report, automated issue
+```
+
+### Failing the action itself
+
+Add the following step _after_ the "Check links" step to fail the action itself if any broken links
+were found:
+
+```yaml
       - name: Set exit status
         run: exit ${{ steps.check_links.outputs.exit_code }}
 ```

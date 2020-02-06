@@ -15,6 +15,4 @@ jobs:
           title: Broken links
           content-filepath: ./errors.txt
           labels: documentation
-      - name: Set exit status
-        run: exit ${{ steps.check_links.outputs.exit_code }}
 
