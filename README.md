@@ -49,7 +49,7 @@ jobs:
           content-filepath: ./errors.txt
           labels: report, automated issue
       - name: Set exit status
-        run: exit ${{ step.check_links.outputs.exit_code }}
+        run: exit ${{ steps.check_links.outputs.exit_code }}
 ```
 
 ### Running on each push
@@ -75,7 +75,7 @@ jobs:
           content-filepath: ./errors.txt
           labels: report, automated issue
       - name: Set exit status
-        run: exit ${{ step.check_links.outputs.exit_code }}
+        run: exit ${{ steps.check_links.outputs.exit_code }}
 ```
 
 ## Example links

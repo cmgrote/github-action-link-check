@@ -16,5 +16,5 @@ jobs:
           content-filepath: ./errors.txt
           labels: documentation
       - name: Set exit status
-        run: exit ${{ step.check_links.outputs.exit_code }}
+        run: exit ${{ steps.check_links.outputs.exit_code }}
 
