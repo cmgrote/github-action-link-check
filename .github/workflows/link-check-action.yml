@@ -4,6 +4,14 @@ jobs:
   link-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: cmgrote/github-action-link-check@master
+      - uses: actions/checkout@master
+      - name: Check links
+        uses: cmgrote/github-action-link-check@master
+      - name: Create issue from file
+        uses: peter-evans/create-issue-from-file@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Broken links
+          content-filepath: ./errors.txt
+          labels: documentation
 
