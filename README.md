@@ -71,3 +71,9 @@ jobs:
           content-filepath: ./errors.txt
           labels: report, automated issue
 ```
+
+## Example links
+
+[This link is to localhost, and is ignored by the configuration file.](http://localhost:8080/somewhere)
+
+[This link does not exist, and will result in an issue being created.](http://not-a-real-link.com/that-should/give/404/issue.html)
