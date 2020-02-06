@@ -6,6 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Check links
+        id: check_links
         uses: cmgrote/github-action-link-check@master
       - name: Create issue from file
         uses: peter-evans/create-issue-from-file@v2
@@ -14,4 +15,6 @@ jobs:
           title: Broken links
           content-filepath: ./errors.txt
           labels: documentation
+      - name: Set exit status
+        run: exit ${{ step.check_links.outputs.exit_code }}
 

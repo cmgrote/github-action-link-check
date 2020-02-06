@@ -39,6 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Check links
+        id: check_links
         uses: cmgrote/github-action-link-check@master
       - name: Create issue from file
         uses: peter-evans/create-issue-from-file@v2
@@ -47,6 +48,8 @@ jobs:
           title: Broken links
           content-filepath: ./errors.txt
           labels: report, automated issue
+      - name: Set exit status
+        run: exit ${{ step.check_links.outputs.exit_code }}
 ```
 
 ### Running on each push
@@ -62,6 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Check links
+        id: check_links
         uses: cmgrote/github-action-link-check@master
       - name: Create issue from file
         uses: peter-evans/create-issue-from-file@v2
@@ -70,10 +74,12 @@ jobs:
           title: Broken links
           content-filepath: ./errors.txt
           labels: report, automated issue
+      - name: Set exit status
+        run: exit ${{ step.check_links.outputs.exit_code }}
 ```
 
 ## Example links
 
 [This link is to localhost, and is ignored by the configuration file.](http://localhost:8080/somewhere)
 
-[This link does not exist, and will result in an issue being created.](http://not-a-real-link.com/that-should/give/404/issue.html)
+[This link does not exist, and will result in an issue being created.](non-existent/relative/path/that-should/give/issue.html)

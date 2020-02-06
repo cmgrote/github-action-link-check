@@ -9,11 +9,16 @@ else
     fd -e md -x /link-check-action {} \; 2> errors.txt
 fi
 
+exit_code=0
+
 if [ -s errors.txt ] ; then
-  exit 113
+  echo -e "At least one broken link was found."
+  exit_code=1
 else
   echo -e "No broken links found."
   if [ -e errors.txt ] ; then
     rm errors.txt
   fi
 fi
+
+echo ::set-output name=exit_code::$exit_code
