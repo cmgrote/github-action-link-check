@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Check Links
-        uses: cmgrote/github-action-link-check@v0.1.0
+        uses: cmgrote/github-action-link-check@master
       - name: Create Issue from File
         uses: peter-evans/create-issue-from-file@v2
         with:
@@ -61,5 +61,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: cmgrote/github-action-link-check@v0.1.0
+    - uses: cmgrote/github-action-link-check@master
 ```

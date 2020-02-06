@@ -1,0 +1,9 @@
+name: Check documentation links
+on: push
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: cmgrote/github-action-link-check@master
+
