@@ -83,7 +83,7 @@ function runMarkdownLinkCheck(filenameForOutput, markdown, opts) {
     }
     if (results.some((result) => result.status === 'dead')) {
       let deadLinks = results.filter(result => { return result.status === 'dead'; });
-      console.error("## %s", filenameForOutput);
+      console.error("### %s", filenameForOutput);
       for (let i = 0; i < deadLinks.length; i++) {
         const result = deadLinks[i];
         console.log('[%s] %s → Status: %s', chalk.red('✖'), result.link, result.statusCode);
