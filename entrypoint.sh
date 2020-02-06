@@ -10,7 +10,7 @@ else
 fi
 
 if [ -s errors.txt ] ; then
-  echo -e "No broken links found."
-else
   exit 113
+else
+  echo -e "No broken links found."
 fi
