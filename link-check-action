@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Inspiration from Thomas Cort: https://github.com/tcort/markdown-link-check/blob/master/markdown-link-check
+
+"use strict";
+
+const markdownLinkCheck = require('markdown-link-check');
+const program = require('commander');
+const chalk = require('chalk');
+const fs = require('fs');
+const url = require('url');
+const path = require('path');
+
+const opts = {};
+let filenameForOutput = '';
+let stream = process.stdin; // read from stdin unless a filename is given
+
+program
+  .option('-c, --config [config]', 'apply a config file (JSON), holding e.g. url specific header configuration')
+  .arguments('[filenameOrUrl]')
+.action(function (filenameOrUrl) {
+  filenameForOutput = filenameOrUrl;
+  fs.stat(filenameOrUrl, function(error, stats) {
+    if (!error && stats.isDirectory()) {
+      console.error(chalk.red('\nERROR: ' + filenameOrUrl + ' is a directory! Please provide a valid filename as an argument.'));
+      process.exit(1);
+    }
+  });
+  opts.baseUrl = 'file://' + path.dirname(path.resolve(filenameOrUrl));
+  stream = fs.createReadStream(filenameOrUrl);
+}).parse(process.argv);
+
+let markdown = ''; // collect the markdown data, then process it
+
+stream
+  .on('data', function (chunk) {
+    markdown += chunk.toString();
+  })
+  .on('error', function(error) {
+    if (error.code === 'ENOENT') {
+      console.error(chalk.red('\nERROR: File not found! Please provide a valid filename as an argument.'));
+    } else {
+      console.error(chalk.red(error));
+    }
+    return process.exit(1);
+  })
+  .on('end', function () {
+    if (filenameForOutput) {
+      console.log(chalk.cyan('\nFILE: ' + filenameForOutput));
+    }
+
+    if (program.config) {
+      fs.access(program.config, (fs.constants || fs).R_OK, function (err) {
+        if (!err) {
+          let configStream = fs.createReadStream(program.config);
+          let configData = '';
+          configStream.on('data', function (chunk) {
+            configData += chunk.toString();
+          }).on('end', function () {
+            let config = JSON.parse(configData);
+            opts.ignorePatterns = config.ignorePatterns;
+            opts.replacementPatterns = config.replacementPatterns;
+            opts.httpHeaders = config.httpHeaders;
+            opts.ignoreDisable = config.ignoreDisable;
+            runMarkdownLinkCheck(filenameForOutput, markdown, opts);
+          });
+        } else {
+          console.error(chalk.red('\nERROR: Config file not accessible.'));
+          process.exit(1);
+        }
+      });
+    } else {
+      runMarkdownLinkCheck(filenameForOutput, markdown, opts);
+    }
+});
+
+function runMarkdownLinkCheck(filenameForOutput, markdown, opts) {
+  markdownLinkCheck(markdown, opts, function (err, results) {
+    if (err) {
+      console.error(chalk.red('\nERROR: something went wrong!'));
+      console.error(err.stack);
+      process.exit(1);
+    }
+    if (results.some((result) => result.status === 'dead')) {
+      let deadLinks = results.filter(result => { return result.status === 'dead'; });
+      console.error("## %s", filenameForOutput);
+      for (let i = 0; i < deadLinks.length; i++) {
+        const result = deadLinks[i];
+        console.log('[%s] %s → Status: %s', chalk.red('✖'), result.link, result.statusCode);
+        console.error("[ ] `%s` (%s)", result.link, result.statusCode);
+      }
+    }
+    console.log('%s links checked.', results.length);
+  });
+}
