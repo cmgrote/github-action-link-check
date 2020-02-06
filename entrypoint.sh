@@ -13,4 +13,7 @@ if [ -s errors.txt ] ; then
   exit 113
 else
   echo -e "No broken links found."
+  if [ -e errors.txt ] ; then
+    rm errors.txt
+  fi
 fi
