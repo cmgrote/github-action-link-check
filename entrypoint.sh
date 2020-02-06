@@ -9,8 +9,8 @@ else
     fd -e md -x /link-check-action {} \; 2> errors.txt
 fi
 
-if [ -e errors.txt ] ; then
-  exit 113
-else
+if [ -s errors.txt ] ; then
   echo -e "No broken links found."
+else
+  exit 113
 fi
