@@ -87,7 +87,7 @@ function runMarkdownLinkCheck(filenameForOutput, markdown, opts) {
       for (let i = 0; i < deadLinks.length; i++) {
         const result = deadLinks[i];
         console.log('[%s] %s → Status: %s', chalk.red('✖'), result.link, result.statusCode);
-        console.error("- [ ] `%s` (%s)", result.link, result.statusCode);
+        console.error("- [ ] %s (%s)", result.link, result.statusCode);
       }
     }
     console.log('%s links checked.', results.length);
