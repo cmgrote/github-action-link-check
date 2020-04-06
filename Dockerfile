@@ -2,7 +2,7 @@
 
 FROM alpine:latest
 
-ENV VERSION ${VERSION:-"3.8.0"}
+ENV VERSION ${VERSION:-"3.8.1"}
 ENV CONFIG_FILE ${CONFIG_FILE:-".github/workflows-config/link-check-action.json"}
 
 LABEL "com.github.actions.name"="link-check-action"

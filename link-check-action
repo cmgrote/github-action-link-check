@@ -12,6 +12,7 @@ const url = require('url');
 const path = require('path');
 
 const opts = {};
+opts.retryOn429 = true;
 let filenameForOutput = '';
 let stream = process.stdin; // read from stdin unless a filename is given
 
