@@ -13,11 +13,11 @@ LABEL "repository"="https://github.com/cmgrote/link-check-action.git"
 LABEL "homepage"="https://github.com/cmgrote/link-check-action"
 LABEL maintainer="cmgrote <chris@thegrotes.net>"
 
+WORKDIR /usr/app
+
 RUN apk --no-cache add bash nodejs npm && \
 	apk --no-cache add -X http://dl-cdn.alpinelinux.org/alpine/edge/community fd && \
 	npm --no-cache install markdown-link-check@${VERSION}
-
-WORKDIR /usr/app
 
 COPY entrypoint.sh /usr/app/entrypoint.sh
 COPY link-check-action /usr/app/link-check-action
