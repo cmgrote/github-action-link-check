@@ -3,10 +3,10 @@
 
 if [ -f "$CONFIG_FILE" ]; then
     echo -e "Using configuration file: $CONFIG_FILE"
-    fd -e md -x /link-check-action --config "$CONFIG_FILE" {} \; 2> errors.txt
+    fd -e md -x /usr/app/link-check-action --config "$CONFIG_FILE" {} \; 2> errors.txt
 else 
     echo -e "Checking without any configuration file."
-    fd -e md -x /link-check-action {} \; 2> errors.txt
+    fd -e md -x /usr/app/link-check-action {} \; 2> errors.txt
 fi
 
 exit_code=0
